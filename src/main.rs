@@ -65,6 +65,6 @@ fn main() {
 
     let app = Application::new(api);
 
-    println!("Rustless server started! on http://0.0.0.0:4000/{}", &uri);
+    println!("Servify server started on http://0.0.0.0:4000/{}", &uri);
     iron::Iron::new(app).http("0.0.0.0:4000").unwrap();
 }
