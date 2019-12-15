@@ -39,9 +39,9 @@ fn main() {
     let api = Api::build(|api| {
 
         // Create API according to arument
-        api.mount(Api::build(|chats_api| {
+        api.mount(Api::build(|servify_api| {
 
-            chats_api.get(&uri, |endpoint| {
+            servify_api.get(&uri, |endpoint| {
 
                 // Add description
                 endpoint.desc(&( "Get ".to_owned() + &uri));
