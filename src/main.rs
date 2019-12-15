@@ -14,7 +14,6 @@ use rustless::json::ToJson;
 
 /// Call any command as a service
 #[derive(Clap)]
-#[clap(version = "0.1.0", author = "Juan Abadie")]
 struct Opts {
     /// Command to be called as a service
     command: String,
