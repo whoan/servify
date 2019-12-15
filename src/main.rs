@@ -27,13 +27,27 @@ struct Opts {
     method: String
 }
 
-fn main() {
+fn run_command(command : &String) -> String {
+    let output = std::process::Command::new("sh")
+        .arg("-c")
+        .arg(command)
+        .output()
+        .expect("failed to execute process");
 
+    println!("status: {}", output.status);
+    println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
+    println!("stderr: {}", String::from_utf8_lossy(&output.stderr));
+
+    return "some".to_string();
+}
+
+fn main() {
     let opts: Opts = Opts::parse();
     println!("Command: {}", opts.command);
     println!("Uri: {}", opts.uri);
     println!("Method: {}", opts.method);
 
+    let command = opts.command;
     let uri = opts.uri;
     let method = opts.method.to_uppercase();
 
@@ -43,7 +57,8 @@ fn main() {
         api.mount(Api::build(|servify_api| {
 
             let closure = |endpoint: &mut endpoint::Endpoint| {
-                endpoint.handle(|client, _params| {
+                endpoint.handle(move |client, _params| {
+                    run_command(&command);
                     client.text(String::from("OK"))
                 })
             };
