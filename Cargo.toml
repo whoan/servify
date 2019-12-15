@@ -9,6 +9,7 @@ rustless = "0.10.0"
 hyper = "0.10.5"
 rustc-serialize = "0.3"
 valico = "1"
+clap = { git = "https://github.com/clap-rs/clap" }
 
 [dependencies.iron]
 version = "*"
