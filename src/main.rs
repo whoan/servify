@@ -7,10 +7,10 @@ extern crate valico;
 #[macro_use]
 extern crate clap;
 
+use rustless::framework::endpoint;
 use rustless::{
     Application, Api, Nesting
 };
-use rustless::json::ToJson;
 
 /// Call any command as a service
 #[derive(Clap)]
@@ -35,22 +35,31 @@ fn main() {
     println!("Method: {}", opts.method);
 
     let uri = opts.uri;
+    let method = opts.method.to_uppercase();
 
     let api = Api::build(|api| {
 
         // Create API according to arument
         api.mount(Api::build(|servify_api| {
 
-            servify_api.get(&uri, |endpoint| {
-
-                // Add description
-                endpoint.desc(&( "Get ".to_owned() + &uri));
-
-                endpoint.handle(|client, params| {
-                    client.json(&params.to_json())
+            let closure = |endpoint: &mut endpoint::Endpoint| {
+                endpoint.handle(|client, _params| {
+                    client.text(String::from("OK"))
                 })
-            });
-
+            };
+            // PATCH method will be available in next release of rustless
+            let callback = if method == "GET" {
+                Api::get
+            } else if method == "POST" {
+                Api::post
+            } else if method == "PUT" {
+                Api::put
+            } else if method == "DELETE" {
+                Api::delete
+            } else {
+                panic!("Unknown HTTP method. Please provide GET|POST|PUT|DELETE or none")
+            };
+            callback(servify_api, &uri, closure);
         }));
     });
 
