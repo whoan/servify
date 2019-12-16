@@ -1,8 +1,5 @@
 extern crate rustless;
-extern crate hyper;
-extern crate iron;
-extern crate rustc_serialize as serialize;
-extern crate valico;
+extern crate jsonway;
 
 #[macro_use]
 extern crate clap;
@@ -27,18 +24,24 @@ struct Opts {
     method: String
 }
 
-fn run_command(command : &String) -> String {
+pub struct CommandStatus  {
+    status: i32,
+    stdout: String,
+    stderr: String,
+}
+
+fn run_command(command : &String) -> CommandStatus {
     let output = std::process::Command::new("sh")
         .arg("-c")
         .arg(command)
         .output()
         .expect("failed to execute process");
 
-    println!("status: {}", output.status);
-    println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
-    println!("stderr: {}", String::from_utf8_lossy(&output.stderr));
-
-    return "some".to_string();
+    CommandStatus {
+        status: output.status.code().unwrap(),
+        stdout: String::from_utf8_lossy(&output.stdout).to_string(),
+        stderr: String::from_utf8_lossy(&output.stderr).to_string(),
+    }
 }
 
 fn main() {
@@ -58,8 +61,13 @@ fn main() {
 
             let closure = |endpoint: &mut endpoint::Endpoint| {
                 endpoint.handle(move |client, _params| {
-                    run_command(&command);
-                    client.text(String::from("OK"))
+                    let command_status = run_command(&command);
+                    let json = jsonway::object(|json| {
+                        json.set("status", command_status.status);
+                        json.set("stdout", command_status.stdout);
+                        json.set("stderr", command_status.stderr);
+                    });
+                    client.json(&json.unwrap())
                 })
             };
             // PATCH method will be available in next release of rustless
