@@ -11,6 +11,7 @@ rustc-serialize = "0.3"
 valico = "1"
 clap = { git = "https://github.com/clap-rs/clap" }
 jsonway = "*"
+tempfile = "3"
 
 [dependencies.iron]
 version = "*"
