@@ -5,6 +5,8 @@ extern crate tempfile;
 #[macro_use]
 extern crate clap;
 
+//use rustless::server::status::StatusCode;
+
 use tempfile::NamedTempFile;
 use std::io::{Write};
 
@@ -50,13 +52,13 @@ fn run_command(command : &String) -> CommandStatus {
 
 fn main() {
     let opts: Opts = Opts::parse();
-    println!("Command: {}", opts.command);
-    println!("Uri: {}", opts.uri);
-    println!("Method: {}", opts.method);
-
     let command = opts.command;
     let uri = opts.uri;
     let method = opts.method.to_uppercase();
+
+    let url = "0.0.0.0:4000";
+    println!("Command: {}", command);
+    println!("Service: {} http://{}/{}", method, url, uri);
 
     let api = Api::build(|api| {
 
@@ -65,8 +67,6 @@ fn main() {
 
             let closure = |endpoint: &mut endpoint::Endpoint| {
                 endpoint.handle(move |client, params| {
-                    println!("params {}", params);
-
                     let data = match params.as_object() {
                         None => "".to_string(),
                         Some(payload) => {
@@ -81,7 +81,7 @@ fn main() {
                     let mut request_command = command.clone();
                     if data.len() > 0 {
                         let _result = tmp_file.write_all(data.as_bytes());
-                        println!("written to {:?}", tmp_file.path());
+                        println!("Data written to {:?}", tmp_file.path());
                         request_command.push_str(" ");
                         request_command.push_str(tmp_file.path().to_str().unwrap());
                     }
@@ -113,7 +113,5 @@ fn main() {
     });
 
     let app = Application::new(api);
-
-    println!("Servify server started on http://0.0.0.0:4000/{}", &uri);
-    iron::Iron::new(app).http("0.0.0.0:4000").unwrap();
+    iron::Iron::new(app).http(url).unwrap();
 }
