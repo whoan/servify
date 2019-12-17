@@ -81,7 +81,6 @@ fn main() {
                     let mut request_command = command.clone();
                     if data.len() > 0 {
                         let _result = tmp_file.write_all(data.as_bytes());
-                        println!("Data written to {:?}", tmp_file.path());
                         request_command.push_str(" ");
                         request_command.push_str(tmp_file.path().to_str().unwrap());
                     }
