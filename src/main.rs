@@ -53,7 +53,7 @@ fn run_command(command : &String) -> CommandStatus {
 fn main() {
     let opts: Opts = Opts::parse();
     let command = opts.command;
-    let uri = opts.uri;
+    let uri = if opts.uri == "/" { "".to_string() } else { opts.uri };
     let method = opts.method.to_uppercase();
 
     let url = "0.0.0.0:4000";
