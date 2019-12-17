@@ -87,3 +87,7 @@ Output:
 ```
 {"status":0,"stderr":"","stdout":"\"Hello Mars\""}
 ```
+
+## License
+
+[MIT](https://github.com/whoan/servify/blob/master/LICENSE)
