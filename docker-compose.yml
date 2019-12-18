@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+
+  servify:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: whoan/servify:buster-slim
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+
