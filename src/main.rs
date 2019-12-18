@@ -30,7 +30,7 @@ struct Opts {
     method: String
 }
 
-pub struct CommandStatus  {
+pub struct CommandStatus {
     status: i32,
     stdout: String,
     stderr: String,

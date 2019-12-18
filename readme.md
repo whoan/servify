@@ -77,7 +77,6 @@ Service: POST http://0.0.0.0:4000/
 
 In another terminal:
 
-
 ```bash
 curl http://0.0.0.0:4000/ -H Content-Type:application/json -d'{"data": "Hello World"}'
 ```
