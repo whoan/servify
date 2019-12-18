@@ -1,0 +1,22 @@
+name: Servify Debian Buster
+
+on: [push]
+
+jobs:
+
+  build:
+
+    name: Build docker image (with cache) and push it to registry
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: actions/checkout@v1
+
+    - uses: whoan/docker-build-with-cache-action@master
+      with:
+        username: whoan
+        password: "${{ secrets.DOCKER_PASSWORD }}"
+        image_name: whoan/servify/servify
+        image_tag: debian-buster
+        registry: docker.pkg.github.com
