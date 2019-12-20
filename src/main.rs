@@ -1,6 +1,7 @@
 extern crate rustless;
 extern crate jsonway;
 extern crate tempfile;
+extern crate base64;
 
 #[macro_use]
 extern crate clap;
@@ -68,22 +69,35 @@ fn main() {
             let closure = |endpoint: &mut endpoint::Endpoint| {
                 endpoint.handle(move |client, params| {
                     let data = match params.as_object() {
-                        None => "".to_string(),
+                        None => None,
                         Some(payload) => {
                             match payload.get("data") {
-                                None => "".to_string(),
-                                Some(content) => content.to_string(),
+                                None => None,
+                                Some(content) => {
+                                    println!("About to decode {}", content);
+                                    Some(base64::decode(&content.to_string()))
+                                }
                             }
                         },
                     };
 
                     let mut tmp_file = NamedTempFile::new().unwrap();
                     let mut request_command = command.clone();
-                    if data.len() > 0 {
-                        let _result = tmp_file.write_all(data.as_bytes());
-                        request_command.push_str(" ");
-                        request_command.push_str(tmp_file.path().to_str().unwrap());
-                    }
+                    match data {
+                        None => None,
+                        Some(result) => {
+                            match result {
+                                Err(error) => println!("Error at decoding: {}", error),
+                                Ok(result) => {
+                                    println!("{}", String::from_utf8_lossy(&result));
+                                    tmp_file.write_all(&result).expect("Something did not work well");
+                                    request_command.push_str(" ");
+                                    request_command.push_str(tmp_file.path().to_str().unwrap());
+                                }
+                            }
+                            Some("")
+                        }
+                    };
 
                     println!("Running {}", request_command);
                     let command_status = run_command(&request_command);
