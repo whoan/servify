@@ -17,21 +17,23 @@ servify -h
 
 ```
 USAGE:
-    servify [OPTIONS] <command>
+    servify [FLAGS] [OPTIONS] <command>
 
 ARGS:
     <command>    Command to be called as a service
 
 FLAGS:
+    -b, --base64     Decode payload data in Base64
     -h, --help       Prints help information
     -V, --version    Prints version information
 
 OPTIONS:
-    -m, --method <method>    [Optional] HTTP method for the service [default: GET]
-    -u, --uri <uri>          [Optional] URI for the service [default: /]
+    -m, --method <method>    HTTP method for the service [default: GET]
+    -u, --uri <uri>          URI for the service [default: /]
+
 ```
 
-## Example
+## Examples
 
 ```bash
 servify 'echo Hello World'
@@ -40,8 +42,6 @@ servify 'echo Hello World'
 Command: echo "Hello World"
 Service: GET http://0.0.0.0:4000/
 ```
-
--------
 
 In another terminal:
 
