@@ -34,11 +34,8 @@ OPTIONS:
 ## Example
 
 ```bash
-servify 'echo "Hello World"'
+servify 'echo Hello World'
 ```
-
-Output:
-
 ```
 Command: echo "Hello World"
 Service: GET http://0.0.0.0:4000/
@@ -51,9 +48,6 @@ In another terminal:
 ```bash
 curl http://0.0.0.0:4000/
 ```
-
-Output:
-
 ```
 {"status":0,"stderr":"","stdout":"Hello World\n"}
 ```
@@ -63,28 +57,41 @@ Output:
 Write some information on **data** field of JSON payload, and the content will be written to a file and appended to the command:
 
 ```bash
-servify -m POST 'sed "s/World/Mars/"'
+servify -m POST 'sed s/World/Mars/'
 ```
-
-Output:
-
 ```
 Command: sed "s/World/Mars/"
 Service: POST http://0.0.0.0:4000/
 ```
 
-------
+In another terminal:
+
+```bash
+curl http://0.0.0.0:4000/ -H Content-Type:application/json -d"{\"data\": \"Hello World\"}"
+```
+```
+{"status":0,"stderr":"","stdout":"Hello Mars"}
+```
+
+### Provide data as Base64
+
+If you need to provide binary or "complex" (in terms of escape characters) data, you can insert it as base 64 in the payload, and use the switch `-b/--base64` to notify servify that should decode the data in advance:
+
+```bash
+servify -m POST --base64 'sed s/World/Mars/'
+```
+```
+Command: sed "s/World/Mars/"
+Service: POST http://0.0.0.0:4000/
+```
 
 In another terminal:
 
 ```bash
-curl http://0.0.0.0:4000/ -H Content-Type:application/json -d'{"data": "Hello World"}'
+curl http://0.0.0.0:4000/ -H Content-Type:application/json -d"{\"data\": \"$(base64 -w0 <<<"Hello World")\"}"
 ```
-
-Output:
-
 ```
-{"status":0,"stderr":"","stdout":"\"Hello Mars\""}
+{"status":0,"stderr":"","stdout":"Hello Mars\n"}
 ```
 
 ## License
