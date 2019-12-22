@@ -94,6 +94,10 @@ curl http://0.0.0.0:4000/ -H Content-Type:application/json -d"{\"data\": \"$(bas
 {"status":0,"stderr":"","stdout":"Hello Mars\n"}
 ```
 
+## TODO
+
+- Learn Rust and make the code better
+
 ## License
 
 [MIT](https://github.com/whoan/servify/blob/master/LICENSE)
