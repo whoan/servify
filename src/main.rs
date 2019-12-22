@@ -74,8 +74,7 @@ fn main() {
                             match payload.get("data") {
                                 None => None,
                                 Some(content) => {
-                                    println!("About to decode {}", content);
-                                    Some(base64::decode(&content.to_string()))
+                                    Some(base64::decode(&content.to_string().trim_matches('"')))
                                 }
                             }
                         },
