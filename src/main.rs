@@ -28,7 +28,11 @@ struct Opts {
 
     /// [Optional] HTTP method for the service
     #[clap(short = "m", long = "method", default_value = "GET")]
-    method: String
+    method: String,
+
+    /// [Optional] Decode payload data in Base64
+    #[clap(short = "b", long = "base64")]
+    base64: bool,
 }
 
 pub struct CommandStatus {
@@ -56,6 +60,7 @@ fn main() {
     let command = opts.command;
     let uri = if opts.uri == "/" { "".to_string() } else { opts.uri };
     let method = opts.method.to_uppercase();
+    let base64 = opts.base64;
 
     let url = "0.0.0.0:4000";
     println!("Command: {}", command);
@@ -74,7 +79,11 @@ fn main() {
                             match payload.get("data") {
                                 None => None,
                                 Some(content) => {
-                                    Some(base64::decode(&content.to_string().trim_matches('"')))
+                                    if base64 {
+                                        Some(base64::decode(&content.to_string().trim_matches('"')))
+                                    } else {
+                                        Some(std::result::Result::Ok(content.to_string().trim_matches('"').to_string().into_bytes()))
+                                    }
                                 }
                             }
                         },
@@ -86,7 +95,7 @@ fn main() {
                         None => None,
                         Some(result) => {
                             match result {
-                                Err(error) => println!("Error at decoding: {}", error),
+                                Err(error) => println!("Error at parsing data: {}", error),
                                 Ok(result) => {
                                     tmp_file.write_all(&result).expect("Something did not work well");
                                     request_command.push_str(" ");
