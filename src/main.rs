@@ -88,7 +88,6 @@ fn main() {
                             match result {
                                 Err(error) => println!("Error at decoding: {}", error),
                                 Ok(result) => {
-                                    println!("{}", String::from_utf8_lossy(&result));
                                     tmp_file.write_all(&result).expect("Something did not work well");
                                     request_command.push_str(" ");
                                     request_command.push_str(tmp_file.path().to_str().unwrap());
