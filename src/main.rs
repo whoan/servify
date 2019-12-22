@@ -22,17 +22,17 @@ struct Opts {
     /// Command to be called as a service
     command: String,
 
-    /// [Optional] URI for the service
+    /// Decode payload data in Base64
+    #[clap(short = "b", long = "base64")]
+    base64: bool,
+
+    /// URI for the service
     #[clap(short = "u", long = "uri", default_value = "/")]
     uri: String,
 
-    /// [Optional] HTTP method for the service
+    /// HTTP method for the service
     #[clap(short = "m", long = "method", default_value = "GET")]
     method: String,
-
-    /// [Optional] Decode payload data in Base64
-    #[clap(short = "b", long = "base64")]
-    base64: bool,
 }
 
 pub struct CommandStatus {
