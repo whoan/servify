@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: whoan/servify:buster-slim
+    image: docker.pkg.github.com/whoan/servify/servify:buster-slim
     restart: always
     volumes:
       - /etc/localtime:/etc/localtime:ro

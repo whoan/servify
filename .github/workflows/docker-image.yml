@@ -18,5 +18,5 @@ jobs:
         username: whoan
         password: "${{ secrets.DOCKER_PASSWORD }}"
         image_name: whoan/servify/servify
-        image_tag: debian-buster
+        image_tag: buster-slim
         registry: docker.pkg.github.com
