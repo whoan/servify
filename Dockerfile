@@ -3,16 +3,16 @@ FROM rust:1-slim-buster as build-stage
 WORKDIR /app
 
 # compy empty main.rs to allow "install" command to download and compile dependencies
-COPY fake-main.rs /app/src/main.rs
 COPY Cargo.lock Cargo.toml /app/
+COPY fake-main.rs /app/src/main.rs
 
-# note this is not the actual code. only to download and compile dependencies in a separate layer
+# note I am not building the actual code. it is only to download and compile dependencies in a separate layer
 RUN \
-  cargo install --path . && \
-  cargo uninstall && \
+  cargo build --release && \
   rm -r src/
 
 COPY src /app/src
+
 RUN cargo install --path .
 
 
