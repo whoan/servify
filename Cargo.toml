@@ -6,7 +6,7 @@ edition = "2018"
 
 [dependencies]
 rustless = "0.10.0"
-clap = { git = "https://github.com/clap-rs/clap" }
+clap = "2.33"
 jsonway = "1"
 tempfile = "3"
 base64 = "0.11.0"
