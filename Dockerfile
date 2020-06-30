@@ -2,7 +2,7 @@ FROM rust:1-slim-buster as build-stage
 
 WORKDIR /app
 
-# compy empty main.rs to allow "install" command to download and compile dependencies
+# copy empty main.rs to allow "install" command to download and compile dependencies
 COPY Cargo.lock Cargo.toml /app/
 COPY fake-main.rs /app/src/main.rs
 

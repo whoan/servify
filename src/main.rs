@@ -6,7 +6,7 @@ use rustless::{
     Application, Api, Nesting
 };
 
-pub struct CommandStatus {
+struct CommandStatus {
     status: i32,
     stdout: String,
     stderr: String,
