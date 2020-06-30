@@ -3,6 +3,12 @@ name = "servify"
 version = "0.1.0"
 authors = ["Juan Eugenio Abadie <juaneabadie@gmail.com>"]
 edition = "2018"
+license = "MIT"
+description = "Run any command as a service."
+homepage = "https://github.com/whoan/servify"
+repository = "https://github.com/whoan/servify"
+readme = "readme.md"
+keywords = ["rest", "rest-api", "cli"]
 
 [dependencies]
 rustless = "0.10.0"
