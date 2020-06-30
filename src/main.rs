@@ -1,39 +1,10 @@
-extern crate rustless;
-extern crate jsonway;
-extern crate tempfile;
-extern crate base64;
-
-#[macro_use]
-extern crate clap;
-
-//use rustless::server::status::StatusCode;
-
+use clap::{Arg, App};
 use tempfile::NamedTempFile;
 use std::io::{Write};
-
 use rustless::framework::endpoint;
 use rustless::{
     Application, Api, Nesting
 };
-
-/// Call any command as a service
-#[derive(Clap)]
-struct Opts {
-    /// Command to be called as a service
-    command: String,
-
-    /// Decode payload data in Base64
-    #[clap(short = "b", long = "base64")]
-    base64: bool,
-
-    /// URI for the service
-    #[clap(short = "u", long = "uri", default_value = "/")]
-    uri: String,
-
-    /// HTTP method for the service
-    #[clap(short = "m", long = "method", default_value = "GET")]
-    method: String,
-}
 
 pub struct CommandStatus {
     status: i32,
@@ -56,11 +27,38 @@ fn run_command(command : &String) -> CommandStatus {
 }
 
 fn main() {
-    let opts: Opts = Opts::parse();
-    let command = opts.command;
-    let uri = if opts.uri == "/" { "".to_string() } else { opts.uri };
-    let method = opts.method.to_uppercase();
-    let base64 = opts.base64;
+    let opts = App::new("servify")
+        .author("Juan Eugenio Abadie <juaneabadie@gmail.com>")
+        .about("Run any command as a service")
+        .arg(Arg::with_name("COMMAND")
+            .required(true)
+            .index(1)
+            .help("Command to be called as a service"))
+        .arg(Arg::with_name("base64")
+            .short("b")
+            .long("base64")
+            .help("Decodes payload in Base64"))
+        .arg(Arg::with_name("uri")
+            .short("u")
+            .long("uri")
+            .value_name("URI")
+            .takes_value(true)
+            .help("URI for the service (default: /)"))
+        .arg(Arg::with_name("method")
+            .short("m")
+            .long("method")
+            .value_name("METHOD")
+            .takes_value(true)
+            .help("HTTP method for the service (default: GET)"))
+        .get_matches();
+
+    let command = String::from(opts.value_of("COMMAND").unwrap());
+    let uri = opts.value_of("uri").unwrap_or("");
+    let method = opts.value_of("method").unwrap_or("GET").to_uppercase();
+    let base64 = match opts.value_of("base64") {
+        Some(some) => some.to_lowercase() == "true",
+        _ => false
+    };
 
     let url = "0.0.0.0:4000";
     println!("Command: {}", command);
@@ -98,7 +96,7 @@ fn main() {
                                 Err(error) => println!("Error at parsing data: {}", error),
                                 Ok(result) => {
                                     tmp_file.write_all(&result).expect("Something did not work well");
-                                    request_command.push_str(" ");
+                                    request_command.push(' ');
                                     request_command.push_str(tmp_file.path().to_str().unwrap());
                                 }
                             }
