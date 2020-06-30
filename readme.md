@@ -17,20 +17,20 @@ servify -h
 
 ```
 USAGE:
-    servify [FLAGS] [OPTIONS] <command>
-
-ARGS:
-    <command>    Command to be called as a service
+    servify [FLAGS] [OPTIONS] <COMMAND>
 
 FLAGS:
-    -b, --base64     Decode payload data in Base64
+    -b, --base64     Decodes payload in Base64
     -h, --help       Prints help information
     -V, --version    Prints version information
 
 OPTIONS:
-    -m, --method <method>    HTTP method for the service [default: GET]
-    -u, --uri <uri>          URI for the service [default: /]
+    -m, --method <METHOD>    HTTP method for the service (default: GET)
+    -p, --port <PORT>        port for the service (default: 8080)
+    -u, --uri <URI>          URI for the service (default: /)
 
+ARGS:
+    <COMMAND>    Command to be called as a service
 ```
 
 ## Examples
@@ -40,13 +40,13 @@ servify 'echo Hello World'
 ```
 ```
 Command: echo "Hello World"
-Service: GET http://0.0.0.0:4000/
+Service: GET http://0.0.0.0:8080/
 ```
 
 In another terminal:
 
 ```bash
-curl http://0.0.0.0:4000/
+curl http://0.0.0.0:8080/
 ```
 ```
 {"status":0,"stderr":"","stdout":"Hello World\n"}
@@ -61,13 +61,13 @@ servify -m POST 'sed s/World/Mars/'
 ```
 ```
 Command: sed "s/World/Mars/"
-Service: POST http://0.0.0.0:4000/
+Service: POST http://0.0.0.0:8080/
 ```
 
 In another terminal:
 
 ```bash
-curl http://0.0.0.0:4000/ -H Content-Type:application/json -d"{\"data\": \"Hello World\"}"
+curl http://0.0.0.0:8080/ -H Content-Type:application/json -d"{\"data\": \"Hello World\"}"
 ```
 ```
 {"status":0,"stderr":"","stdout":"Hello Mars"}
@@ -82,13 +82,13 @@ servify -m POST --base64 'sed s/World/Mars/'
 ```
 ```
 Command: sed "s/World/Mars/"
-Service: POST http://0.0.0.0:4000/
+Service: POST http://0.0.0.0:8080/
 ```
 
 In another terminal:
 
 ```bash
-curl http://0.0.0.0:4000/ -H Content-Type:application/json -d"{\"data\": \"$(base64 -w0 <<<"Hello World")\"}"
+curl http://0.0.0.0:8080/ -H Content-Type:application/json -d"{\"data\": \"$(base64 -w0 <<<"Hello World")\"}"
 ```
 ```
 {"status":0,"stderr":"","stdout":"Hello Mars\n"}
