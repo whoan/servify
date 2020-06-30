@@ -28,8 +28,8 @@ fn run_command(command : &String) -> CommandStatus {
 
 fn main() {
     let opts = App::new("servify")
-        .author("Juan Eugenio Abadie <juaneabadie@gmail.com>")
         .about("Run any command as a service")
+        .version(clap::crate_version!())
         .arg(Arg::with_name("COMMAND")
             .required(true)
             .index(1)
@@ -38,6 +38,12 @@ fn main() {
             .short("b")
             .long("base64")
             .help("Decodes payload in Base64"))
+        .arg(Arg::with_name("port")
+            .short("p")
+            .long("port")
+            .value_name("PORT")
+            .takes_value(true)
+            .help("port for the service (default: 8080)"))
         .arg(Arg::with_name("uri")
             .short("u")
             .long("uri")
@@ -53,6 +59,7 @@ fn main() {
         .get_matches();
 
     let command = String::from(opts.value_of("COMMAND").unwrap());
+    let port: i32 = opts.value_of("port").unwrap_or("8080").parse().unwrap();
     let uri = opts.value_of("uri").unwrap_or("");
     let method = opts.value_of("method").unwrap_or("GET").to_uppercase();
     let base64 = match opts.value_of("base64") {
@@ -60,7 +67,7 @@ fn main() {
         _ => false
     };
 
-    let url = "0.0.0.0:4000";
+    let url = format!("0.0.0.0:{}", port);
     println!("Command: {}", command);
     println!("Service: {} http://{}/{}", method, url, uri);
 
