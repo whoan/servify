@@ -35,6 +35,8 @@ ARGS:
 
 ## Examples
 
+Run this in a terminal:
+
 ```bash
 servify 'echo Hello World'
 ```
@@ -43,7 +45,7 @@ Command: echo "Hello World"
 Service: GET http://0.0.0.0:8080/
 ```
 
-In another terminal:
+And this in another terminal:
 
 ```bash
 curl http://0.0.0.0:8080/

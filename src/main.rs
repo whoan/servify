@@ -73,7 +73,7 @@ fn main() {
 
     let api = Api::build(|api| {
 
-        // Create API according to arument
+        // Create API according to parameters
         api.mount(Api::build(|servify_api| {
 
             let closure = |endpoint: &mut endpoint::Endpoint| {
