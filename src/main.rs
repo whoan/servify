@@ -62,10 +62,7 @@ fn main() {
     let port: i32 = opts.value_of("port").unwrap_or("8080").parse().unwrap();
     let uri = opts.value_of("uri").unwrap_or("");
     let method = opts.value_of("method").unwrap_or("GET").to_uppercase();
-    let base64 = match opts.value_of("base64") {
-        Some(some) => some.to_lowercase() == "true",
-        _ => false
-    };
+    let base64 = opts.is_present("base64");
 
     let url = format!("0.0.0.0:{}", port);
     println!("Command: {}", command);
